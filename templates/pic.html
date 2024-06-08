@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <title>Previous Year Question Papers</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .content {
+            flex: 1;
+        }
+        footer {
+            text-align: center;
+            padding: 2px;
+            background-color: rgb(81, 86, 87);
+            color: white;
+            clear: both;
+            position: relative;
+            bottom: 0;
+            height: 75px;
+            margin-top: auto;
+        }
+        .papers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .paper {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 20px;
+            width: auto;
+            height: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .paper img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        h3, h4 {
+            color: #333;
+        }
+        i {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="{% url 'home' %}">Home</a>
+            </div>
+
+            <div>
+                <form action="search" method="get" role="search">
+                    {% csrf_token %}
+                    <input type="search" name="q" id="">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="papers">
+        {% for paper in papers %}
+        <div class="paper">
+            <h3>Subject: {{ paper.subject }}</h3>
+            <img src="{{ paper.pic.url }}" alt="{{ paper.subject }} paper" width="600" height="300">
+            <h4>Branch: {{paper.branch}} , Regulation: {{ paper.regulation }}</h4>
+            <h4>Year: {{ paper.year }}</h4>
+            <i>Date: {{ paper.date }}</i>
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer class="footer">
+        <p>&copy; K.Kartheek. All rights reserved.</p>
+        <p>
+            <a href="https://www.example.com/privacy" style="color: #ccc;">Privacy Policy</a> |
+            <a href="https://www.example.com/terms" style="color: #ccc;">Terms of Service</a>
+        </p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <title>Previous Year Question Papers</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .content {
+            flex: 1;
+        }
+        footer {
+            text-align: center;
+            padding: 2px;
+            background-color: rgb(81, 86, 87);
+            color: white;
+            clear: both;
+            position: relative;
+            bottom: 0;
+            height: 75px;
+            margin-top: auto;
+        }
+        .papers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .paper {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .paper img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        h3, h4 {
+            color: #333;
+        }
+        i {
+            color: #666;
+        }
+        .filter-section {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        .filter-button {
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 0px;
+            margin-left: 120px;
+        }
+        .filter-button:focus {
+            outline: none;
+        }
+
+        .pagination .page-item .page-link {
+            color: #007bff; /* Bootstrap primary color */
+            border: 1px solid #dee2e6; /* Light gray border */
+        }
+
+        .pagination .page-item .page-link:hover {
+            color: #0056b3; /* Darker shade of Bootstrap primary color */
+            border-color: #dee2e6;
+        }
+
+        .head{
+            text-align: center;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff; /* Bootstrap primary color */
+            border-color: #007bff;
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d; /* Bootstrap secondary text color */
+            pointer-events: none;
+            background-color: #ffffff;
+            border-color: #dee2e6;
+        }
+
+        /* Optional: Adjust spacing and sizing for better readability */
+        .pagination .page-item {
+            margin: 0 2px;
+        }
+
+        .pagination .page-item .page-link {
+            padding: 6px 12px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="{% url 'home' %}">Home</a>
+            </div>
+
+            <div>
+                <form action="search" method="get" role="search">
+                    {% csrf_token %}
+                    <input type="search" name="q" id="">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
+            <div class="nav-links">
+                <a href="{% url 'signin' %}">Sign In</a> |
+                <a href="{% url 'register' %}">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content">
+        <button class="filter-button" onclick="toggleFilterSection()">Filter &darr;</button>
+        <div class="filter-section" id="filterSection">
+            <form action="filters" method="get">
+                {% csrf_token %}
+                <label for="regulation" class="form-label"><b style="color: orangered; font-size: larger;"> Filter </b> Regulation:</label>
+                <select id="regulation" name="regulation" class="form-select" required>
+                    <option value="R19">R19</option>
+                    <option value="R20">R20</option>
+                    <option value="R23">R23</option>
+                </select>
+
+                <label for="year" class="form-label">Year:</label>
+                <select id="year" name="year" class="form-select" required>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
+                
+                <label for="branch1" class="form-label">Branch:</label>
+                <select id="branch1" name="branch" class="form-select" required>
+                    <option value="EEE">EEE</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="IT">IT</option>
+                    <option value="MECH">MECH</option>
+                    <option value="CIVIL">CIVIL</option>
+                    <option value="MET">MET</option>
+                </select>
+
+                <button type="submit">Apply</button>
+            </form>
+        </div>
+
+        <div class="container">
+            <h3 class="head" style="color: brown;">Previous Year Question Papers</h3>
+            <div class="papers">
+                {% for paper in data %}
+                <a href="{% url 'pic' paper.id %}">
+                <div class="paper">
+                    <h4>Subject: {{ paper.subject }}</h4>
+                    <img src="{{ paper.pic.url }}" alt="" width="600" height="300">
+                    <h6>Branch: {{paper.branch}} , Regulation: {{ paper.regulation }}</h6>
+                    <h6>Year: {{ paper.year }}</h6>
+                    <i>Uploaded: {{ paper.date }}</i>
+                </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if data.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ data.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                {% endif %}
+    
+                {% for page_num in data.paginator.page_range %}
+                <li class="page-item {% if data.number == page_num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+                {% endfor %}
+    
+                {% if data.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ data.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    
+
+    <footer class="footer">
+        <p>&copy; K.Kartheek. All rights reserved.</p>
+        <p>
+            <a href="https://www.example.com/privacy" style="color: #ccc;">Privacy Policy</a> |
+            <a href="https://www.example.com/terms" style="color: #ccc;">Terms of Service</a>
+        </p>
+    </footer>
+
+    <script>
+        function toggleFilterSection() {
+            var filterSection = document.getElementById('filterSection');
+            var filterButton = document.querySelector('.filter-button');
+
+            if (filterSection.style.display === 'none' || filterSection.style.display === '') {
+                filterSection.style.display = 'block';
+                filterButton.innerHTML = 'Hide Filter &#94;';
+            } else {
+                filterSection.style.display = 'none';
+                filterButton.innerHTML = 'Filter &#94;';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Previous Year Question Papers</title>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .content {
+            flex: 1;
+        }
+        footer {
+            text-align: center;
+            padding: 2px;
+            background-color: rgb(81, 86, 87);
+            color: white;
+            clear: both;
+            position: relative;
+            bottom: 0;
+            height: 75px;
+            margin-top: auto;
+        }
+        .navbar {
+            background-color: #343a40;
+            padding: 15px;
+        }
+        .navbar .logo a {
+            color: #fff;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+        .navbar .btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+        }
+        
+
+        .btn1 {
+            border-radius: 5px;
+            background-color: #4CAF50;
+  	border: 2px solid #4CAF50;
+  	color: #ffffff;
+  	padding: 5px 12px;
+  	text-align: center;
+  	font-size: 14px;
+
+            
+        }
+        .btn1 a {
+            color: #fff;
+            text-decoration: none;}
+        .navbar .btn a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .btn1:hover {
+            background-color: #186d1c;
+            border: 2px solid #46a04a;
+	cursor: pointer;
+        }
+
+        .btn2 {
+            border-radius: 5px;
+            background-color: #F44336;
+  	border: 2px solid #F44336;
+  	color: #ffffff;
+  	padding: 5px 12px;
+  	text-align: center;
+  	font-size: 14px;
+
+            
+        }
+        .btn2 a {
+            color: #fff;
+            text-decoration: none;}
+        .navbar .btn a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .btn2:hover {
+            background-color:#f21c0d;
+            border: 2px solid #F44336;
+	cursor: pointer;
+        }
+
+        .navbar .btn:hover {
+            background-color: #0056e0;
+            cursor: pointer;
+        }
+        .navbar .user-greeting {
+            color: #fff;
+            margin-right: 15px;
+        }
+        .navbar .signout-link {
+            color: #dc3545;
+            text-decoration: none;
+            box-shadow: #f21c0d;
+        }
+        .navbar .signout-link:hover {
+            color: #a71d2a;
+        }
+        .papers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .paper {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .paper img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        h3, h4 {
+            color: #333;
+        }
+        i {
+            color: #666;
+        }
+        .up{
+            text-align: right;
+        }
+
+        .pagination .page-item .page-link {
+            color: #007bff; /* Bootstrap primary color */
+            border: 1px solid #dee2e6; /* Light gray border */
+        }
+
+        .pagination .page-item .page-link:hover {
+            color: #0056b3; /* Darker shade of Bootstrap primary color */
+            border-color: #dee2e6;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff; /* Bootstrap primary color */
+            border-color: #007bff;
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d; /* Bootstrap secondary text color */
+            pointer-events: none;
+            background-color: #ffffff;
+            border-color: #dee2e6;
+        }
+
+        /* Optional: Adjust spacing and sizing for better readability */
+        .pagination .page-item {
+            margin: 0 2px;
+        }
+
+        .pagination .page-item .page-link {
+            padding: 6px 12px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="logo">
+                <a href="{% url 'home' %}">Home</a>
+            </div>
+            <div>
+                <button type="button" class="btn"><a href="{% url 'upload' user_id %}">Upload</a></button>
+            </div>
+            <div class="user-greeting">
+                Hello {{ user }}
+            </div>
+            <div>
+                <form action="search" method="get" role="search">
+                    {% csrf_token %}
+                    <input type="search" name="q" id="">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div>
+                <a href="{% url 'signout' %}" class="signout-link">Signout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h4>Your Uploads</h4>                            <h6 class="up">Total Uploads : {{ upload_count }}</h6>
+        <div class="papers">
+            {% for paper in papers %}
+            <a href="{% url 'pic' paper.id %}">
+                <div class="paper">
+                    <h4>Subject: {{ paper.subject }}</h4>
+                    <img src="{{ paper.pic.url }}" alt="{{ paper.subject }} paper" width="600" height="300">
+                    <h6>Branch: {{ paper.branch }} , Regulation: {{ paper.regulation }}</h6>
+                    <h6>Year: {{ paper.year }}</h6>
+                    <i>Date: {{ paper.date }}</i>
+            
+                        <button type="button" class="btn1"><a href="{% url 'update' paper.id %}">Update</a></button>
+                        <button type="button" class="btn2"><a href="{% url 'delete' paper.id %}">Delete</a></button>
+
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+
+
+    <div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if data.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ data.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                {% endif %}
+    
+                {% for page_num in data.paginator.page_range %}
+                <li class="page-item {% if data.number == page_num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+                {% endfor %}
+    
+                {% if data.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ data.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; K.Kartheek. All rights reserved.</p>
+        <p>
+            <a href="https://www.example.com/privacy" style="color: #ccc;">Privacy Policy</a> |
+            <a href="https://www.example.com/terms" style="color: #ccc;">Terms of Service</a>
+        </p>
+    </footer>
+
+</body>
+</html>

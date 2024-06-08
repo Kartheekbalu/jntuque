@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .upload-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        .upload-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-control, .form-select {
+            margin-bottom: 15px;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h3 class="upload-header">Update Details</h3>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="img" class="form-label">Update Paper</label>
+                <input type="file" id="img" name="pic" accept="image/*" value="{{post.pic}}" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="sub" class="form-label">Subject Name</label>
+                <input type="text" name="subject" id="sub" value="{{post.subject}}" class="form-control" placeholder="Enter Subject Name" required>
+            </div>
+            <div>
+                <label for="branch1" class="form-label">Branch:</label>
+                <select id="branch1" name="branch" value="{{post.branch}}" class="form-select" required>
+                    <option value="EEE">EEE</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="IT">IT</option>
+                    <option value="MECH">MECH</option>
+                    <option value="CIVIL">CIVIL</option>
+                    <option value="MET">MET</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="regulation" class="form-label">Select Regulation</label>
+                <select id="regulation" name="regulation" value="{{post.regulation}}" class="form-select" required>
+                    <option value="R19">R19</option>
+                    <option value="R20">R20</option>
+                    <option value="R23">R23</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="year" class="form-label">Year</label>
+                <input type="number" name="year" id="year" value="{{post.year}}" class="form-control" placeholder="Enter Year" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Paper</button>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+</body>
+</html>
